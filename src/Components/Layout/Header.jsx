@@ -1,7 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate(); // Initialize navigate inside the component
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    alert("Logout successful");
+    navigate("/"); // Redirect to the login page
+  };
+
   return (
     <header className="header">
       <div className="header-left">
@@ -10,7 +18,8 @@ const Header = () => {
         </div>
       </div>
       <div className="header-right">
-        <button className="user-button">User1</button>
+        <button onClick={handleLogout}>Logout</button>
+        <button className="profiledata">GetProfileData</button>
         <button className="example-button">EXAMPLE</button>
       </div>
     </header>

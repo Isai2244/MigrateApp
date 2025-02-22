@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import PrivateRoute from "./PrivateRoute";
+import ProtectedRoute from "./ProtectedRoute"; // Ensure this file exists
 import PrivateLayout from "./PrivateLayout";
 import Login from "../Components/Security/Login";
 import AdminDashboard from "../Components/Dashboard/AdminDashboard";
@@ -9,21 +9,48 @@ import ViewTable from "../Components/ViewData/ViewTable";
 import Chat from "../Components/Help/Chat";
 
 const Routing = () => {
+  const [isUserAllowed, setIsUserAllowed] = useState(false);
+  // const isUserAllowed = localStorage.getItem("token") !== null;
+  console.log(isUserAllowed);
+
+
   return (
     <Router>
       <Routes>
         {/* Public Route */}
         <Route path="/" element={<Login />} />
-        
+
         {/* Private Routes */}
-        <Route element={<PrivateRoute />}>
-          <Route element={<PrivateLayout />}>
-            <Route path="/admindashboard" element={<AdminDashboard />} />
-            <Route path="/upload" element={<Upload />} />
-            <Route path="/datatable" element={<ViewTable />} />
-            <Route path="/help" element={<Chat />} />
-          </Route>
-        </Route>
+        <Route
+          path="/admindashboard"
+          element={
+              <AdminDashboard />
+          }
+        />
+        <Route
+          path="/upload"
+          element={
+            <ProtectedRoute condition={isUserAllowed} redirectTo="/">
+              <Upload />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/datatable"
+          element={
+            <ProtectedRoute condition={isUserAllowed} redirectTo="/">
+              <ViewTable />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/help"
+          element={
+            <ProtectedRoute condition={isUserAllowed} redirectTo="/">
+              <Chat />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
